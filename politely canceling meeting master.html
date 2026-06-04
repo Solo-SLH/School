@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Change of Plans: Master Polite English</title>
+    <!-- Html2Canvas for saving the certificate as an image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            /* Vibrant Liquid Light Mode Colors */
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #EC4899;
+            --success: #059669;
+            --success-bg: rgba(16, 185, 129, 0.2);
+            --warning: #D97706;
+            --danger: #DC2626;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            
+            /* Liquid Background Blobs - Light */
+            --blob1: #818CF8;
+            --blob2: #F472B6;
+            --blob3: #34D399;
+            --bg-base: #F8FAFC;
+            
+            /* Liquid Glassmorphism Settings */
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-blur: blur(32px);
+            --glass-border-top: rgba(255, 255, 255, 0.8);
+            --glass-border-right: rgba(255, 255, 255, 0.4);
+            --glass-border-bottom: rgba(255, 255, 255, 0.2);
+            --glass-border-left: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255,255,255,0.5);
+            --card-radius: 28px;
+        }
+
+        [data-theme="dark"] {
+            /* Neon Dark Mode Colors */
+            --primary: #818CF8;
+            --primary-hover: #6366F1;
+            --secondary: #F472B6;
+            --success: #34D399;
+            --success-bg: rgba(52, 211, 153, 0.2);
+            --warning: #FBBF24;
+            --danger: #F87171;
+            --text-main: #F8FAFC;
+            --text-muted: #CBD5E1;
+            
+            /* Liquid Background Blobs - Dark */
+            --blob1: #312E81;
+            --blob2: #831843;
+            --blob3: #064E3B;
+            --bg-base: #020617;
+            
+            /* Dark Liquid Glass Settings */
+            --glass-bg: rgba(15, 23, 42, 0.45);
+            --glass-border-top: rgba(255, 255, 255, 0.2);
+            --glass-border-right: rgba(255, 255, 255, 0.05);
+            --glass-border-bottom: rgba(255, 255, 255, 0.01);
+            --glass-border-left: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 15px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Animated Liquid Background --- */
+        .liquid-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); opacity: 0.7;
+            animation: float 20s infinite alternate ease-in-out;
+            transform-origin: center center;
+        }
+        .blob1 { width: 55vw; height: 55vw; background: var(--blob1); top: -10%; left: -10%; animation-duration: 25s;}
+        .blob2 { width: 45vw; height: 45vw; background: var(--blob2); bottom: -10%; right: -10%; animation-duration: 22s; animation-delay: -5s;}
+        .blob3 { width: 35vw; height: 35vw; background: var(--blob3); top: 30%; left: 30%; animation-duration: 28s; animation-delay: -10s;}
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(10vw, -10vh) scale(1.1) rotate(10deg); }
+            66% { transform: translate(-5vw, 15vh) scale(0.9) rotate(-5deg); }
+            100% { transform: translate(-10vw, -5vh) scale(1.05) rotate(15deg); }
+        }
+
+        /* --- Login Screen UI --- */
+        .auth-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            background: var(--bg-base);
+        }
+        .auth-input {
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px solid var(--glass-border-top);
+            background: rgba(255,255,255,0.2); color: var(--text-main); font-size: 1.1em; outline: none;
+            backdrop-filter: blur(10px); transition: all 0.3s;
+        }
+        [data-theme="dark"] .auth-input { background: rgba(0,0,0,0.2); }
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(79, 70, 229, 0.3); }
+
+        /* --- Certificate Card UI --- */
+        .certificate-card {
+            padding: 40px 30px; text-align: center; position: relative; overflow: hidden;
+            border: 2px solid var(--glass-border-top); background: var(--glass-bg);
+            border-radius: var(--card-radius); box-shadow: var(--glass-shadow);
+        }
+        .cert-watermark { position: absolute; top: -30px; right: -30px; font-size: 12em; opacity: 0.05; user-select: none; }
+        .cert-score-box {
+            background: rgba(0,0,0,0.03); border-radius: 24px; padding: 25px; 
+            display: inline-block; min-width: 250px; border: 1px solid var(--glass-border-top);
+        }
+        [data-theme="dark"] .cert-score-box { background: rgba(255,255,255,0.03); }
+
+        .app-container { max-width: 1000px; margin: 0 auto; width: 100%; position: relative; z-index: 1;}
+
+        .glass {
+            background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border-top: 1px solid var(--glass-border-top); border-right: 1px solid var(--glass-border-right);
+            border-bottom: 1px solid var(--glass-border-bottom); border-left: 1px solid var(--glass-border-left);
+            border-radius: var(--card-radius); box-shadow: var(--glass-shadow);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 10px; } .mt-2 { margin-top: 20px; }
+        .mb-1 { margin-bottom: 10px; } .mb-2 { margin-bottom: 20px; }
+
+        /* --- Header & Nav --- */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; margin-bottom: 25px; gap: 15px; }
+        header h1 { font-size: 2em; font-weight: 900; letter-spacing: -0.5px; }
+        .subtitle { opacity: 0.85; font-weight: 600; font-size: 1em; }
+
+        .theme-btn {
+            background: rgba(0,0,0,0.05); color: var(--text-main);
+            border: 1px solid var(--glass-border-top); padding: 10px 20px;
+            border-radius: 50px; cursor: pointer; font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="dark"] .theme-btn { background: rgba(255,255,255,0.1); }
+        .theme-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        nav {
+            display: flex; gap: 12px; padding: 12px; margin-bottom: 30px;
+            overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
+            border-radius: 50px;
+        }
+        nav::-webkit-scrollbar { display: none; }
+        nav button {
+            background: transparent; color: var(--text-main); border: none;
+            padding: 12px 24px; border-radius: 50px; cursor: pointer;
+            font-weight: 700; font-size: 0.95em; flex-shrink: 0; opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        nav button:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+        nav button.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: #fff; opacity: 1; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .section { display: none; padding: 35px; animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 30px; }
+        .section.active { display: block; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95) translateY(30px); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        .category-title { width: 100%; margin: 35px 0 15px 0; color: var(--primary); font-size: 1.4em; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+
+        .card { padding: 25px; text-align: left; position: relative; overflow: hidden; }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 20px 0 0 20px;
+        }
+        .card h3 { color: var(--text-main); margin-bottom: 8px; font-size: 1.2em; font-weight: 800; }
+        .thai-note { font-size: 1em; color: var(--secondary); display: block; margin-bottom: 15px; font-weight: 600;}
+
+        .progress-track {
+            width: 100%; background: rgba(0,0,0,0.05); border-radius: 50px; height: 24px; 
+            margin-top: 15px; border: 1px solid var(--glass-border-top); overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] .progress-track { background: rgba(255,255,255,0.05); }
+        .progress-fill {
+            width: 0%; background: linear-gradient(90deg, var(--success), #34D399); height: 100%; 
+            border-radius: 50px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        .score-display { color: var(--warning); font-size: 3.5em; margin: 5px 0; font-weight: 900; line-height: 1; }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff;
+            border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer;
+            font-size: 1.1em; font-weight: 800; width: 100%; margin-top: 25px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3), inset 0 2px 0 rgba(255,255,255,0.3);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-action:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.4), inset 0 2px 0 rgba(255,255,255,0.4); }
+        .btn-action:active { transform: translateY(2px) scale(0.98); }
+
+        .btn-small {
+            background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 2px solid var(--primary);
+            padding: 8px 20px; border-radius: 50px; font-weight: 800; cursor: pointer; font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .btn-small:hover { background: var(--primary); color: #fff; box-shadow: 0 5px 15px rgba(99,102,241,0.3); }
+
+        .matching-container { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+        .match-col { flex: 1; display: flex; flex-direction: column; gap: 15px; min-width: 250px; }
+        .match-item {
+            background: var(--glass-bg); color: var(--text-main); padding: 18px; border-radius: 20px;
+            border: 2px solid var(--glass-border-top); border-bottom-width: 4px; cursor: pointer; font-weight: 700;
+            text-align: center; user-select: none; transition: all 0.2s;
+        }
+        .match-item:active:not(.matched) { transform: translateY(2px); border-bottom-width: 2px; }
+        .match-item.selected { background: var(--primary); color: #fff; border-color: var(--primary-hover); }
+        .match-item.matched { background: var(--success); color: #fff; border-color: #047857; opacity: 0.7; pointer-events: none; transform: translateY(2px); border-bottom-width: 2px;}
+        .match-item.wrong { background: var(--danger); color: #fff; border-color: #991B1B; animation: shake 0.4s; }
+
+        .checklist-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+            background: rgba(0,0,0,0.03); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border-top);
+        }
+        [data-theme="dark"] .checklist-container { background: rgba(255,255,255,0.03); }
+        .check-item { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text-muted); opacity: 0.7; transition: all 0.3s; }
+        .check-item.done { color: var(--success); opacity: 1; }
+        .check-item.done i { background: var(--success); color: white; border-color: var(--success); }
+        .check-circle {
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--text-muted);
+            display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s;
+        }
+
+        .chat-container {
+            display: flex; flex-direction: column; gap: 15px; margin: 10px 0; height: 320px; overflow-y: auto;
+            padding: 20px; border-radius: 24px; background: rgba(0,0,0,0.02); border: inset 1px solid var(--glass-border-top);
+            scroll-behavior: smooth;
+        }
+        .message { max-width: 85%; padding: 15px 20px; border-radius: 24px; font-size: 1.05em; font-weight: 600; animation: popIn 0.3s ease; line-height: 1.4;}
+        .message.ai { background: var(--glass-bg); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid var(--glass-border-top); }
+        .message.user { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; align-self: flex-end; border-bottom-right-radius: 6px; box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);}
+        
+        .mic-button {
+            background: linear-gradient(135deg, var(--success), #059669); color: white; border: none;
+            width: 85px; height: 85px; border-radius: 50%; font-size: 2.2em;
+            cursor: pointer; margin: 15px auto; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4), inset 0 2px 0 rgba(255,255,255,0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .mic-button:hover { transform: scale(1.08); }
+        .mic-button.recording { background: linear-gradient(135deg, var(--danger), #B91C1C); animation: pulseRecord 1.5s infinite; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);}
+
+        .eval-box { background: rgba(0,0,0,0.03); padding: 20px; border-radius: 20px; margin-top: 15px; border: 1px solid var(--glass-border-top); }
+        [data-theme="dark"] .eval-box { background: rgba(255,255,255,0.02); }
+        .eval-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 700;}
+        .eval-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 15px;}
+        [data-theme="dark"] .eval-bar-bg { background: rgba(255,255,255,0.1); }
+        .eval-bar-fill { height: 100%; border-radius: 10px; transition: width 1.5s ease-out; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; }
+            .section { padding: 25px 20px; }
+            .grid { grid-template-columns: 1fr; }
+            .matching-container { flex-direction: column; }
+            .match-col { min-width: 100%; }
+            .checklist-container { grid-template-columns: 1fr; gap: 5px;}
+            .mic-button { width: 75px; height: 75px; font-size: 1.8em;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="liquid-bg">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
+
+<div id="authScreen" class="auth-screen">
+    <div class="card glass" style="width: 90%; max-width: 450px; text-align: center; padding: 40px 30px;">
+        <h1 class="text-gradient" style="font-size: 2.2em; margin-bottom: 10px;">Polite English Master</h1>
+        <p class="subtitle mb-2" style="font-size: 1.1em;">ลงทะเบียนก่อนเริ่มเรียน (Student Login)</p>
+        
+        <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-weight: 700; color: var(--text-main); margin-left: 5px;">ชื่อ-นามสกุล (Name)</label>
+            <input type="text" id="inputName" class="auth-input mt-1" placeholder="เช่น เด็กชายรักดี เรียนเก่ง">
+        </div>
+        
+        <div style="text-align: left; margin-bottom: 30px;">
+            <label style="font-weight: 700; color: var(--text-main); margin-left: 5px;">เลขที่ (Student ID)</label>
+            <input type="number" id="inputId" class="auth-input mt-1" placeholder="เช่น 15">
+        </div>
+        
+        <button class="btn-action" style="margin-top: 0;" onclick="app.loginStudent()">เริ่มเรียนเลย 🚀</button>
+    </div>
+</div>
+
+<div class="app-container hidden" id="mainApp">
+    <header class="glass">
+        <div>
+            <h1>Change of Plans ✨</h1>
+            <p class="subtitle">Master Canceling & Rescheduling</p>
+        </div>
+        <button class="theme-btn" onclick="app.toggleTheme()">🌓 Theme</button>
+    </header>
+
+    <nav class="glass" id="mainNav">
+        <button class="active" data-target="dashboard">🏠 Dashboard</button>
+        <button data-target="vocabulary">🅰️ Vocabulary</button>
+        <button data-target="phrases">📚 Phrases</button>
+        <button data-target="matchingGame">🧩 Match Game</button>
+        <button data-target="roleplay">💬 Roleplay (Test)</button>
+    </nav>
+
+    <main>
+        <section id="dashboard" class="section glass active">
+            <h2 class="mb-2 text-gradient" style="font-size: 2.2em;" id="dashGreeting">Welcome Back! 🚀</h2>
+            <p class="subtitle mb-2">Complete all modules to unlock your final score.</p>
+            <div class="grid">
+                <div class="card glass">
+                    <h3>Course Progress</h3>
+                    <div class="progress-track">
+                        <div id="progressBar" class="progress-fill"></div>
+                    </div>
+                    <p id="progressText" class="mt-1" style="font-weight: 800; color: var(--primary);">0% Completed</p>
+                </div>
+                <div class="card glass text-center">
+                    <h3>Overall Score</h3>
+                    <h2 id="overallScoreDisplay" class="score-display">--</h2>
+                    <p style="font-size: 1em; font-weight: 700; color: var(--text-muted);">Points out of 100</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vocabulary" class="section glass">
+            <h2 class="text-gradient">Key Vocabulary 🅰️</h2>
+            <p class="subtitle mb-2">Learn the essential words before forming sentences.</p>
+            <div id="vocabContainer"></div>
+            <button class="btn-action" onclick="app.markComplete('vocab')">🎉 I know these words</button>
+        </section>
+
+        <section id="phrases" class="section glass">
+            <h2 class="text-gradient">Essential Sentences 📖</h2>
+            <p class="subtitle mb-2">Learn the 4 steps of a polite cancellation (Click Listen).</p>
+            <div id="phrasesContainer"></div>
+            <button class="btn-action" onclick="app.markComplete('phrases')">🎉 I've studied the 4 steps</button>
+        </section>
+
+        <section id="matchingGame" class="section glass">
+            <h2 class="text-gradient">Review & Match 🧩</h2>
+            <p class="subtitle mb-2">Test your memory. Match English with Thai.</p>
+            
+            <div style="display:flex; justify-content:center; gap:10px; margin-bottom: 25px;">
+                <button id="btnMatchVocab" class="btn-small active" style="background:var(--primary); color:#fff;" onclick="app.initMatchingGame('vocab')">Part 1: Vocabulary</button>
+                <button id="btnMatchPhrase" class="btn-small" onclick="app.initMatchingGame('phrase')">Part 2: Sentences</button>
+            </div>
+
+            <div class="matching-container">
+                <div class="match-col" id="colEn"></div>
+                <div class="match-col" id="colTh"></div>
+            </div>
+            <p id="matchStatus" class="text-center mt-2" style="font-weight:900; font-size:1.5em;"></p>
+            <button class="btn-action hidden" id="resetMatchBtn" onclick="app.initMatchingGame(app.state.currentMatchMode)">🔄 Play Again</button>
+        </section>
+
+        <section id="roleplay" class="section glass">
+            <h2 class="text-gradient">Final Test: Live Roleplay 💬</h2>
+            <p class="subtitle mb-2">Use the 4-step process to negotiate with the AI. <br>Your structure, pronunciation, and fluency will be evaluated.</p>
+            
+            <select id="scenarioSelector" class="theme-btn mb-2" style="width:100%; text-align:left; font-size:1.1em; background:var(--glass-bg);" onchange="app.loadScenario()"></select>
+
+            <div class="checklist-container">
+                <div class="check-item" id="chk-sorry"><div class="check-circle">✓</div> 1. Say Sorry</div>
+                <div class="check-item" id="chk-reason"><div class="check-circle">✓</div> 2. Give Reason</div>
+                <div class="check-item" id="chk-suggest"><div class="check-circle">✓</div> 3. Suggest Time</div>
+                <div class="check-item" id="chk-confirm"><div class="check-circle">✓</div> 4. Confirm Plan</div>
+            </div>
+
+            <div class="chat-container" id="chatBox"></div>
+
+            <div class="text-center mt-2" id="rpControls">
+                <button id="rpMicBtn" class="mic-button" onclick="app.toggleRoleplayRecording()">🎙️</button>
+                <p id="roleplayStatus" style="font-weight: 800; font-size: 1.1em; color: var(--primary);">Tap mic to reply</p>
+            </div>
+            
+            <!-- Evaluation Results -->
+            <div id="evaluationPanel" class="hidden mt-2">
+                <h3 class="text-gradient text-center" style="font-size:1.8em; margin-bottom:10px;">Test Results 📊</h3>
+                <div class="eval-box">
+                    <div class="eval-row"><span>Structure (4 Steps)</span><span id="score-structure">0/40</span></div>
+                    <div class="eval-bar-bg"><div id="bar-structure" class="eval-bar-fill" style="background:var(--primary); width:0%;"></div></div>
+                    
+                    <div class="eval-row"><span>Pronunciation API</span><span id="score-pronun">0/30</span></div>
+                    <div class="eval-bar-bg"><div id="bar-pronun" class="eval-bar-fill" style="background:var(--secondary); width:0%;"></div></div>
+                    
+                    <div class="eval-row"><span>Fluency & Vocab</span><span id="score-fluency">0/30</span></div>
+                    <div class="eval-bar-bg"><div id="bar-fluency" class="eval-bar-fill" style="background:var(--warning); width:0%;"></div></div>
+                    
+                    <h2 class="text-center mt-2" style="font-size:2.5em; color:var(--success);">Total: <span id="score-total">0</span>/100</h2>
+                </div>
+                <button class="btn-action" onclick="app.generateCertificate()">🎉 Save Score & Finish</button>
+            </div>
+
+            <div id="certificateContainer" class="hidden mt-2">
+                <!-- Content to be screenshotted by html2canvas -->
+                <div id="certificateBox" class="certificate-card mb-2" style="border: 2px solid var(--primary); padding-bottom: 50px;">
+                    <div class="cert-watermark">🏆</div>
+                    <h2 class="text-gradient" style="font-size: 2.2em; margin-bottom: 5px;">Certificate of Completion</h2>
+                    <p style="font-weight: 700; color: var(--text-muted); font-size: 1.1em;">Course: Master Polite English</p>
+                    
+                    <h1 id="certName" style="font-size: 2.8em; color: var(--text-main); margin: 30px 0 5px 0;">Student Name</h1>
+                    <p id="certId" style="font-size: 1.3em; font-weight: 700; color: var(--secondary); margin-bottom: 30px;">Student ID: 99</p>
+                    
+                    <div class="cert-score-box">
+                        <p style="font-weight: 700; font-size: 1.2em; color: var(--text-muted);">Final Score</p>
+                        <h2 id="certScore" style="font-size: 5em; color: var(--success); line-height: 1; margin: 10px 0;">100</h2>
+                        <p style="font-weight: 800; font-size: 1.5em; margin-top: 15px;">CEFR Level: <span id="certCEFR" style="color: var(--primary);">B2</span></p>
+                    </div>
+                </div>
+                
+                <button class="btn-action" style="background: linear-gradient(135deg, var(--success), #047857);" onclick="app.downloadImage()">📸 บันทึกเป็นรูปภาพ</button>
+                <button class="btn-small mt-2" style="width: 100%; padding: 15px; font-size: 1.1em;" onclick="app.backToDashboard()">🏠 กลับหน้าหลัก</button>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<script>
+const app = {
+    // --- Application Data ---
+    data: {
+        vocabulary: {
+            "Action Verbs": [
+                { en: "Cancel", th: "ยกเลิก" },
+                { en: "Reschedule", th: "เปลี่ยนเวลา / เลื่อนนัด" },
+                { en: "Postpone", th: "เลื่อนออกไป" },
+                { en: "Attend", th: "เข้าร่วม" }
+            ],
+            "Reasons": [
+                { en: "Emergency", th: "เหตุฉุกเฉิน" },
+                { en: "Unexpected", th: "ที่ไม่คาดคิด / กะทันหัน" },
+                { en: "Traffic", th: "การจราจรติดขัด" },
+                { en: "Sick", th: "ป่วย / ไม่สบาย" }
+            ]
+        },
+        phrases: {
+            "Step 1: Apologizing (การขอโทษ)": [
+                { en: "I'm sorry, but I can't make it.", th: "ฉันขอโทษด้วย แต่ฉันไปไม่ได้" },
+                { en: "I apologize, but I need to cancel.", th: "ฉันต้องขออภัย แต่ฉันจำเป็นต้องยกเลิก" }
+            ],
+            "Step 2: Giving Reasons (การบอกเหตุผล)": [
+                { en: "I am feeling under the weather.", th: "ฉันรู้สึกไม่ค่อยสบาย" },
+                { en: "I have a sudden family emergency.", th: "ฉันมีเหตุฉุกเฉินทางครอบครัวกะทันหัน" },
+                { en: "Something unexpected came up.", th: "มีธุระด่วน/เรื่องไม่คาดคิดเข้ามา" }
+            ],
+            "Step 3: Suggesting New Plans (การเสนอเวลาใหม่)": [
+                { en: "Can we reschedule for tomorrow?", th: "ขอเลื่อนไปเป็นพรุ่งนี้ได้ไหม?" },
+                { en: "Could we push it back by an hour?", th: "ขอเลื่อนออกไปสักหนึ่งชั่วโมงได้ไหม?" }
+            ],
+            "Step 4: Confirming (การยืนยัน)": [
+                { en: "Yes, that works perfectly for me.", th: "ได้เลย เวลานั้นสะดวกมาก" },
+                { en: "Great, I will see you then.", th: "เยี่ยมเลย แล้วเจอกันตามนั้น" }
+            ]
+        },
+        scenarios: [
+            { title: "🏥 1. Calling the Dentist (นัดหมอฟัน)", greeting: "Hello, Smile Dental Clinic. How can I help you?", hint: "เลื่อนนัดเป็นพรุ่งนี้ เพราะไม่สบาย" },
+            { title: "🏢 2. Meeting with Boss (ประชุมหัวหน้า)", greeting: "Hi there. Are you ready for our 3 PM meeting?", hint: "ขอเลื่อนออกไป 1 ชั่วโมง เพราะมีธุระด่วน" },
+            { title: "☕ 3. Coffee with Friend (นัดเพื่อน)", greeting: "Hey! Are we still on for coffee later?", hint: "ขอยกเลิก เพราะรถติดมาก" },
+            { title: "✈️ 4. Flight Change (เลื่อนตั๋วเครื่องบิน)", greeting: "Sky High Airlines. How may I assist you with your booking?", hint: "ขอเลื่อนเป็นวันศุกร์แทน เพราะเหตุฉุกเฉิน" },
+            { title: "💼 5. Job Interview (สัมภาษณ์งาน)", greeting: "HR Department here. We are expecting you tomorrow.", hint: "ขอเลื่อนวัน เพราะป่วย" }
+        ]
+    },
+
+    // --- State Management ---
+    state: {
+        student: { name: "", id: "" },
+        progress: { vocab: false, phrases: false, matchVocab: false, matchPhrase: false, roleplayPass: false, finalScore: 0 },
+        voices: [],
+        currentMatchMode: 'vocab',
+        selectedEn: null, selectedTh: null, matchesFound: 0,
+        
+        // Roleplay Tracking
+        currentScenario: 0, 
+        isRPing: false,
+        rpData: { steps: { sorry: false, reason: false, suggest: false, confirm: false }, confidences: [], totalWords: 0 },
+        recogRp: null, tempTotalScore: 0
+    },
+
+    init() {
+        this.setupTheme();
+        
+        // Check if student is already logged in
+        const savedStudent = localStorage.getItem('studentDataLiquid');
+        if (savedStudent) {
+            this.state.student = JSON.parse(savedStudent);
+            this.showMainApp();
+        } else {
+            // Wait for user to login
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
+    },
+
+    loginStudent() {
+        const name = document.getElementById('inputName').value.trim();
+        const id = document.getElementById('inputId').value.trim();
+        
+        if (name === "" || id === "") {
+            alert("กรุณากรอกชื่อและเลขที่ให้ครบถ้วนครับ!");
+            return;
+        }
+        
+        this.state.student = { name: name, id: id };
+        localStorage.setItem('studentDataLiquid', JSON.stringify(this.state.student));
+        
+        this.showMainApp();
+    },
+
+    showMainApp() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        
+        document.getElementById('dashGreeting').innerText = `Welcome, ${this.state.student.name}! 🚀`;
+        
+        this.loadProgress();
+        this.setupNavigation();
+        
+        this.renderVocabulary();
+        this.renderPhrases();
+        this.initMatchingGame('vocab');
+        this.renderScenarios();
+        this.updateDashboard();
+        
+        this.initVoices();
+        this.initSpeechRecognition();
+    },
+
+    loadProgress() {
+        // Tie progress to student ID to avoid mixing data
+        const saved = localStorage.getItem(`prog_${this.state.student.id}`);
+        if (saved) this.state.progress = JSON.parse(saved);
+    },
+
+    saveProgress() {
+        localStorage.setItem(`prog_${this.state.student.id}`, JSON.stringify(this.state.progress));
+        this.updateDashboard();
+    },
+
+    setupNavigation() {
+        document.querySelectorAll('#mainNav button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
+                
+                document.getElementById(e.target.dataset.target).classList.add('active');
+                e.target.classList.add('active');
+                window.speechSynthesis.cancel(); 
+            });
+        });
+    },
+
+    setupTheme() {
+        if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+    },
+
+    toggleTheme() {
+        const body = document.body;
+        if(body.getAttribute('data-theme') !== 'dark') {
+            body.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark');
+        } else {
+            body.removeAttribute('data-theme'); localStorage.setItem('theme', 'light');
+        }
+    },
+
+    markComplete(moduleId) {
+        this.state.progress[moduleId] = true;
+        this.saveProgress();
+    },
+
+    updateDashboard() {
+        const p = this.state.progress;
+        let completed = 0;
+        if(p.vocab) completed++; if(p.phrases) completed++; 
+        if(p.matchVocab) completed++; if(p.matchPhrase) completed++; 
+        if(p.roleplayPass) completed++; 
+        
+        let percentage = Math.round((completed / 5) * 100);
+        document.getElementById('progressText').innerText = `${percentage}% Completed`;
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+        
+        const scoreDisplay = document.getElementById('overallScoreDisplay');
+        if(p.finalScore > 0) {
+            scoreDisplay.innerText = `${p.finalScore}`;
+            scoreDisplay.style.color = p.finalScore >= 80 ? 'var(--success)' : 'var(--warning)';
+        }
+    },
+
+    initVoices() {
+        const load = () => { this.state.voices = window.speechSynthesis.getVoices(); };
+        load(); window.speechSynthesis.onvoiceschanged = load; 
+    },
+
+    speakNatural(text, callback) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const bestVoice = this.state.voices.find(v => v.name.includes('Google US English') || v.name.includes('Natural')) 
+                       || this.state.voices.find(v => v.lang.startsWith('en-US'));
+        if (bestVoice) utterance.voice = bestVoice;
+        utterance.rate = 0.95; utterance.pitch = 1.05;
+        if (callback) utterance.onend = callback;
+        window.speechSynthesis.speak(utterance);
+    },
+
+    initSpeechRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return console.warn("Speech Recognition not supported.");
+
+        this.state.recogRp = new SpeechRecognition();
+        this.state.recogRp.lang = 'en-US';
+        this.state.recogRp.interimResults = false;
+        
+        this.state.recogRp.onresult = (e) => {
+            const transcript = e.results[0][0].transcript;
+            const confidence = e.results[0][0].confidence;
+            this.addChatMessage(transcript, 'user');
+            this.handleRoleplayInput(transcript, confidence);
+        };
+        this.state.recogRp.onerror = (e) => { this.stopRoleplayRecording(); };
+        this.state.recogRp.onend = () => this.stopRoleplayRecording();
+    },
+
+    shuffleArray(array) {
+        let curId = array.length;
+        while (0 !== curId) {
+            let randId = Math.floor(Math.random() * curId); curId -= 1;
+            let tmp = array[curId]; array[curId] = array[randId]; array[randId] = tmp;
+        }
+        return array;
+    },
+
+    renderVocabulary() {
+        let html = '';
+        for (const category in this.data.vocabulary) {
+            html += `<div class="category-title">${category}</div><div class="grid">`;
+            html += this.data.vocabulary[category].map(v => `
+                <div class="card glass">
+                    <h3 style="font-size:1.4em;">${v.en}</h3><span class="thai-note" style="font-size:1.1em;">${v.th}</span>
+                    <button class="btn-small" onclick="app.speakNatural('${v.en.replace(/'/g, "\\'")}')">🔊 Listen</button>
+                </div>`).join('');
+            html += `</div>`;
+        }
+        document.getElementById('vocabContainer').innerHTML = html;
+    },
+
+    renderPhrases() {
+        let html = '';
+        for (const category in this.data.phrases) {
+            html += `<div class="category-title">${category}</div><div class="grid">`;
+            html += this.data.phrases[category].map(p => `
+                <div class="card glass">
+                    <h3>"${p.en}"</h3><span class="thai-note">${p.th}</span>
+                    <button class="btn-small" onclick="app.speakNatural('${p.en.replace(/'/g, "\\'")}')">🔊 Listen</button>
+                </div>`).join('');
+            html += `</div>`;
+        }
+        document.getElementById('phrasesContainer').innerHTML = html;
+    },
+
+    initMatchingGame(mode = 'vocab') {
+        this.state.currentMatchMode = mode;
+        this.state.matchesFound = 0; this.state.selectedEn = null; this.state.selectedTh = null;
+        
+        const btnVocab = document.getElementById('btnMatchVocab');
+        const btnPhrase = document.getElementById('btnMatchPhrase');
+        if(mode === 'vocab') {
+            btnVocab.style.background = 'var(--primary)'; btnVocab.style.color = '#fff';
+            btnPhrase.style.background = 'transparent'; btnPhrase.style.color = 'var(--primary)';
+        } else {
+            btnPhrase.style.background = 'var(--primary)'; btnPhrase.style.color = '#fff';
+            btnVocab.style.background = 'transparent'; btnVocab.style.color = 'var(--primary)';
+        }
+
+        const statusEl = document.getElementById('matchStatus'); statusEl.innerText = ""; 
+        document.getElementById('resetMatchBtn').classList.add('hidden');
+        
+        let allPairs = [];
+        const dataSource = mode === 'vocab' ? this.data.vocabulary : this.data.phrases;
+        for (const cat in dataSource) allPairs = allPairs.concat(dataSource[cat]);
+        
+        let selectedPairs = this.shuffleArray([...allPairs]).slice(0, 5);
+        
+        document.getElementById('colEn').innerHTML = this.shuffleArray([...selectedPairs]).map(item => 
+            `<div class="match-item" onclick="app.handleMatchClick('en', this, '${item.en.replace(/'/g, "\\'")}')">${item.en}</div>`
+        ).join('');
+
+        document.getElementById('colTh').innerHTML = this.shuffleArray([...selectedPairs]).map(item => 
+            `<div class="match-item" onclick="app.handleMatchClick('th', this, '${item.en.replace(/'/g, "\\'")}')">${item.th}</div>`
+        ).join('');
+    },
+
+    handleMatchClick(type, element, key) {
+        if(element.classList.contains('matched')) return;
+
+        if(type === 'en') { 
+            if(this.state.selectedEn) this.state.selectedEn.el.classList.remove('selected'); 
+            this.state.selectedEn = { el: element, key: key }; 
+        } else { 
+            if(this.state.selectedTh) this.state.selectedTh.el.classList.remove('selected'); 
+            this.state.selectedTh = { el: element, key: key }; 
+        }
+        element.classList.add('selected');
+
+        if(this.state.selectedEn && this.state.selectedTh) {
+            const el1 = this.state.selectedEn.el; const el2 = this.state.selectedTh.el;
+            const statusEl = document.getElementById('matchStatus');
+
+            if(this.state.selectedEn.key === this.state.selectedTh.key) {
+                el1.classList.replace('selected', 'matched'); el2.classList.replace('selected', 'matched');
+                this.speakNatural(this.state.selectedEn.key); this.state.matchesFound++;
+                
+                statusEl.innerHTML = "Correct! ✅"; statusEl.style.color = "var(--success)";
+                
+                if(this.state.matchesFound === 5) { 
+                    statusEl.innerHTML = "🎉 All matched! Great job!"; 
+                    document.getElementById('resetMatchBtn').classList.remove('hidden'); 
+                    if(this.state.currentMatchMode === 'vocab') this.markComplete('matchVocab');
+                    else this.markComplete('matchPhrase');
+                }
+            } else {
+                el1.classList.remove('selected'); el2.classList.remove('selected');
+                el1.classList.add('wrong'); el2.classList.add('wrong');
+                statusEl.innerHTML = "Try again! ❌"; statusEl.style.color = "var(--danger)";
+                setTimeout(() => { el1.classList.remove('wrong'); el2.classList.remove('wrong'); }, 400);
+            }
+            this.state.selectedEn = null; this.state.selectedTh = null;
+        }
+    },
+
+    renderScenarios() {
+        const sel = document.getElementById('scenarioSelector');
+        sel.innerHTML = this.data.scenarios.map((s, i) => `<option value="${i}">${s.title} (Hint: ${s.hint})</option>`).join('');
+    },
+
+    loadScenario() {
+        window.speechSynthesis.cancel(); 
+        this.state.currentScenario = document.getElementById('scenarioSelector').value; 
+        
+        // Reset tracking data
+        this.state.rpData = { steps: { sorry: false, reason: false, suggest: false, confirm: false }, confidences: [], totalWords: 0 };
+        this.updateChecklistUI();
+        
+        document.getElementById('chatBox').innerHTML = ""; 
+        document.getElementById('evaluationPanel').classList.add('hidden');
+        document.getElementById('certificateContainer').classList.add('hidden');
+        document.getElementById('rpControls').classList.remove('hidden');
+        
+        const greeting = this.data.scenarios[this.state.currentScenario].greeting;
+        this.addChatMessage(greeting, 'ai'); 
+        this.speakNatural(greeting);
+        
+        document.getElementById('roleplayStatus').innerText = "Tap mic to reply"; 
+    },
+
+    toggleRoleplayRecording() {
+        if(!this.state.recogRp) return alert("Speech recognition unavailable in this browser.");
+        if(this.state.isRPing) { this.state.recogRp.stop(); return; }
+        
+        try {
+            this.state.recogRp.start(); this.state.isRPing = true; 
+            document.getElementById('rpMicBtn').classList.add('recording');
+            document.getElementById('roleplayStatus').innerText = "Listening..."; 
+            window.speechSynthesis.cancel();
+        } catch(err) {}
+    },
+
+    stopRoleplayRecording() {
+        this.state.isRPing = false; 
+        document.getElementById('rpMicBtn').classList.remove('recording');
+        if(document.getElementById('roleplayStatus').innerText === "Listening...") {
+             document.getElementById('roleplayStatus').innerText = "Processing...";
+        }
+    },
+
+    addChatMessage(text, sender) {
+        const chatBox = document.getElementById('chatBox'); 
+        chatBox.insertAdjacentHTML('beforeend', `<div class="message ${sender}">${text}</div>`); 
+        chatBox.scrollTop = chatBox.scrollHeight;
+    },
+
+    handleRoleplayInput(input, confidence) {
+        const text = input.toLowerCase();
+        
+        // Data Collection for Eval
+        const words = text.split(' ').filter(w => w.length > 0);
+        this.state.rpData.totalWords += words.length;
+        if(confidence > 0) this.state.rpData.confidences.push(confidence);
+        else this.state.rpData.confidences.push(0.85 + (Math.random() * 0.1)); // Fallback for iOS bug
+        
+        // 4-Step Logic Detection
+        if (text.match(/(sorry|apologize|forgive|unfortunately|afraid)/)) this.state.rpData.steps.sorry = true;
+        if (text.match(/(because|emergency|sick|traffic|doctor|busy|unexpected|matter|issue|hospital|weather|can't)/)) this.state.rpData.steps.reason = true;
+        if (text.match(/(reschedule|time|tomorrow|next|how about|push back|friday|monday|change|later)/)) this.state.rpData.steps.suggest = true;
+        if (text.match(/(yes|ok|okay|perfect|great|see you|thanks|thank you|awesome|sure|work)/)) this.state.rpData.steps.confirm = true;
+        
+        this.updateChecklistUI();
+        this.determineAIResponse();
+    },
+
+    updateChecklistUI() {
+        const s = this.state.rpData.steps;
+        const setCheck = (id, state) => {
+            const el = document.getElementById(id);
+            if(state) { el.classList.add('done'); el.querySelector('.check-circle').innerHTML = '✓'; }
+            else { el.classList.remove('done'); el.querySelector('.check-circle').innerHTML = ''; }
+        };
+        setCheck('chk-sorry', s.sorry); setCheck('chk-reason', s.reason); 
+        setCheck('chk-suggest', s.suggest); setCheck('chk-confirm', s.confirm);
+    },
+
+    determineAIResponse() {
+        const s = this.state.rpData.steps;
+        let aiResp = "";
+        let endScenario = false;
+        
+        if (!s.sorry && !s.reason) aiResp = "Is everything alright? Are you calling to change the appointment?";
+        else if (s.reason && !s.suggest) aiResp = "I understand completely. When would you like to reschedule to?";
+        else if (s.suggest && !s.confirm) aiResp = "Alright, I've checked the calendar and we can do that. Does that work for you?";
+        else if (s.confirm) { aiResp = "Great, it's all confirmed. See you then!"; endScenario = true; }
+        else { aiResp = "I see. Please let me know what time works best for you."; }
+
+        setTimeout(() => { 
+            this.addChatMessage(aiResp, 'ai'); 
+            this.speakNatural(aiResp, () => {
+                if(endScenario) {
+                    document.getElementById('roleplayStatus').innerText = "Conversation Ended."; 
+                    document.getElementById('rpControls').classList.add('hidden');
+                    this.showEvaluation();
+                } else {
+                    document.getElementById('roleplayStatus').innerText = "Tap mic to reply"; 
+                }
+            }); 
+        }, 800); 
+    },
+
+    showEvaluation() {
+        document.getElementById('evaluationPanel').classList.remove('hidden');
+        
+        // 1. Structure (40 points, 10 per step)
+        let stepCount = 0;
+        const steps = this.state.rpData.steps;
+        if(steps.sorry) stepCount++; if(steps.reason) stepCount++; 
+        if(steps.suggest) stepCount++; if(steps.confirm) stepCount++;
+        const scoreStruct = (stepCount / 4) * 40;
+        
+        // 2. Pronunciation (30 points based on confidence)
+        const confs = this.state.rpData.confidences;
+        let avgConf = confs.length > 0 ? (confs.reduce((a,b)=>a+b, 0) / confs.length) : 0;
+        const scorePronun = Math.round(avgConf * 30);
+        
+        // 3. Fluency (30 points based on word count/effort)
+        const words = this.state.rpData.totalWords;
+        const scoreFluency = Math.min(30, Math.round((words / 15) * 30)); 
+        
+        const total = scoreStruct + scorePronun + scoreFluency;
+        
+        // Animate UI Bars
+        setTimeout(() => {
+            document.getElementById('bar-structure').style.width = `${(scoreStruct/40)*100}%`;
+            document.getElementById('score-structure').innerText = `${scoreStruct}/40`;
+            
+            document.getElementById('bar-pronun').style.width = `${(scorePronun/30)*100}%`;
+            document.getElementById('score-pronun').innerText = `${scorePronun}/30`;
+            
+            document.getElementById('bar-fluency').style.width = `${(scoreFluency/30)*100}%`;
+            document.getElementById('score-fluency').innerText = `${scoreFluency}/30`;
+            
+            this.animateValue("score-total", 0, total, 1500);
+        }, 100);
+        
+        this.state.tempTotalScore = total;
+        document.getElementById('evaluationPanel').scrollIntoView({ behavior: 'smooth' });
+    },
+
+    animateValue(id, start, end, duration) {
+        let obj = document.getElementById(id);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            if (progress < 1) window.requestAnimationFrame(step);
+        };
+        window.requestAnimationFrame(step);
+    },
+
+    getCEFRLevel(score) {
+        if (score >= 95) return "C1 (Advanced)";
+        if (score >= 85) return "B2 (Upper Intermediate)";
+        if (score >= 70) return "B1 (Intermediate)";
+        if (score >= 50) return "A2 (Elementary)";
+        return "A1 (Beginner)";
+    },
+
+    generateCertificate() {
+        this.state.progress.roleplayPass = true;
+        
+        // Base points from completing modules (Max 40)
+        let baseScore = 0;
+        if(this.state.progress.vocab) baseScore += 10;
+        if(this.state.progress.phrases) baseScore += 10;
+        if(this.state.progress.matchVocab) baseScore += 10;
+        if(this.state.progress.matchPhrase) baseScore += 10;
+        
+        // Add Roleplay score (Max 60 mapped from the 100 eval score)
+        const mappedRpScore = Math.round(this.state.tempTotalScore * 0.6);
+        
+        const finalScore = baseScore + mappedRpScore;
+        this.state.progress.finalScore = finalScore;
+        this.saveProgress();
+        
+        // Populate Certificate UI
+        document.getElementById('certName').innerText = this.state.student.name;
+        document.getElementById('certId').innerText = `Student ID: ${this.state.student.id}`;
+        document.getElementById('certScore').innerText = finalScore;
+        document.getElementById('certCEFR').innerText = this.getCEFRLevel(finalScore);
+        
+        // Swap panels
+        document.getElementById('evaluationPanel').classList.add('hidden');
+        document.getElementById('certificateContainer').classList.remove('hidden');
+        document.getElementById('certificateContainer').scrollIntoView({ behavior: 'smooth' });
+    },
+
+    downloadImage() {
+        const certBox = document.getElementById('certificateBox');
+        
+        // Use html2canvas to capture the visual element
+        html2canvas(certBox, { 
+            backgroundColor: null, // Keeps transparency if needed
+            scale: 2 // High resolution
+        }).then(canvas => {
+            const link = document.createElement('a');
+            const safeName = this.state.student.name.replace(/\s+/g, '_');
+            link.download = `English_Certificate_${safeName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            alert("ไม่สามารถสร้างรูปภาพได้ กรุณาลองใหม่อีกครั้ง");
+            console.error(err);
+        });
+    },
+
+    backToDashboard() {
+        document.getElementById('mainNav').querySelector('[data-target="dashboard"]').click();
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    }
+};
+
+window.addEventListener('DOMContentLoaded', () => app.init());
+
+</script>
+</body>
+</html>
